@@ -1,97 +1,821 @@
 <!doctype html>
 <html lang="es">
+
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Quiz Diseño de Interfaces</title>
-<style>
-body{margin:0;font-family:sans-serif;background:#0f172a;color:white;display:flex;justify-content:center;align-items:center;height:100vh}
-.container{max-width:800px;width:100%;padding:20px}
-.card{background:#1e293b;border-radius:12px;padding:20px}
-button{display:block;width:100%;margin:8px 0;padding:12px;border:none;border-radius:8px;background:#334155;color:white;cursor:pointer}
-button:hover{background:#475569}
-.correct{background:#22c55e}
-.wrong{background:#ef4444}
-</style>
+   <meta charset="utf-8" />
+   <meta name="viewport" content="width=device-width, initial-scale=1" />
+   <title>Quiz Diseño de Interfaces</title>
+   <style>
+      :root {
+         --bg1: #0b1020;
+         --bg2: #0f1b3d;
+         --card: rgba(255, 255, 255, .08);
+         --card2: rgba(255, 255, 255, .12);
+         --stroke: rgba(255, 255, 255, .14);
+         --text: rgba(255, 255, 255, .92);
+         --muted: rgba(255, 255, 255, .65);
+         --good: #22c55e;
+         --bad: #ef4444;
+         --accent: #60a5fa;
+         --accent2: #a78bfa;
+         --shadow: 0 20px 60px rgba(0, 0, 0, .45);
+         --radius: 22px;
+         --radius2: 16px;
+         --maxw: 980px;
+         --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      }
+
+      * {
+         box-sizing: border-box
+      }
+
+      body {
+         margin: 0;
+         font-family: var(--font);
+         color: var(--text);
+         min-height: 100svh;
+         background:
+            radial-gradient(1000px 600px at 15% 10%, rgba(167, 139, 250, .22), transparent 60%),
+            radial-gradient(900px 500px at 90% 25%, rgba(96, 165, 250, .20), transparent 55%),
+            linear-gradient(180deg, var(--bg1), var(--bg2));
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         padding: 24px;
+      }
+
+      .shell {
+         width: min(var(--maxw), 100%);
+         display: grid;
+         gap: 16px;
+      }
+
+      .topbar {
+         display: flex;
+         align-items: center;
+         justify-content: space-between;
+         gap: 16px;
+         padding: 14px 16px;
+         border: 1px solid var(--stroke);
+         background: linear-gradient(180deg, rgba(255, 255, 255, .10), rgba(255, 255, 255, .06));
+         border-radius: var(--radius);
+         box-shadow: var(--shadow);
+         backdrop-filter: blur(10px);
+      }
+
+      .brand {
+         display: flex;
+         align-items: center;
+         gap: 12px;
+         min-width: 220px;
+      }
+
+      .logo {
+         width: 38px;
+         height: 38px;
+         border-radius: 12px;
+         background: conic-gradient(from 200deg, var(--accent), var(--accent2), var(--accent));
+         box-shadow: 0 10px 30px rgba(96, 165, 250, .25);
+         border: 1px solid rgba(255, 255, 255, .25);
+      }
+
+      .brand h1 {
+         font-size: 14px;
+         letter-spacing: .12em;
+         text-transform: uppercase;
+         margin: 0;
+         color: rgba(255, 255, 255, .85);
+      }
+
+      .brand small {
+         display: block;
+         margin-top: 2px;
+         font-size: 12px;
+         color: var(--muted);
+         letter-spacing: 0;
+         text-transform: none;
+      }
+
+      .meta {
+         display: flex;
+         align-items: center;
+         gap: 12px;
+         flex-wrap: wrap;
+         justify-content: flex-end;
+      }
+
+      .pill {
+         border: 1px solid var(--stroke);
+         background: rgba(255, 255, 255, .06);
+         padding: 8px 12px;
+         border-radius: 999px;
+         font-size: 13px;
+         color: rgba(255, 255, 255, .78);
+         display: flex;
+         align-items: center;
+         gap: 8px;
+         white-space: nowrap;
+      }
+
+      .dot {
+         width: 8px;
+         height: 8px;
+         border-radius: 999px;
+         background: var(--accent);
+         box-shadow: 0 0 0 6px rgba(96, 165, 250, .18);
+      }
+
+      .progressWrap {
+         width: min(380px, 100%);
+         border: 1px solid var(--stroke);
+         background: rgba(255, 255, 255, .06);
+         border-radius: 999px;
+         overflow: hidden;
+         height: 12px;
+      }
+
+      .progress {
+         height: 100%;
+         width: 0%;
+         background: linear-gradient(90deg, var(--accent), var(--accent2));
+         border-radius: 999px;
+         transition: width .35s ease;
+      }
+
+      .card {
+         border: 1px solid var(--stroke);
+         background: linear-gradient(180deg, rgba(255, 255, 255, .10), rgba(255, 255, 255, .05));
+         border-radius: var(--radius);
+         box-shadow: var(--shadow);
+         backdrop-filter: blur(10px);
+         overflow: hidden;
+      }
+
+      .cardHeader {
+         padding: 18px 20px 14px;
+         border-bottom: 1px solid rgba(255, 255, 255, .10);
+         display: flex;
+         gap: 14px;
+         align-items: flex-start;
+         justify-content: space-between;
+         flex-wrap: wrap;
+      }
+
+      .kicker {
+         font-size: 12px;
+         letter-spacing: .14em;
+         text-transform: uppercase;
+         color: rgba(255, 255, 255, .70);
+      }
+
+      .qTitle {
+         margin: 6px 0 0;
+         font-size: 20px;
+         line-height: 1.25;
+         letter-spacing: -.01em;
+         max-width: 820px;
+      }
+
+      .content {
+         padding: 18px 20px 20px;
+         display: grid;
+         gap: 16px;
+      }
+
+      .options {
+         display: grid;
+         gap: 12px;
+      }
+
+      button.option {
+         width: 100%;
+         text-align: left;
+         border: 1px solid var(--stroke);
+         background: rgba(255, 255, 255, .06);
+         color: var(--text);
+         padding: 14px 14px;
+         border-radius: var(--radius2);
+         cursor: pointer;
+         transition: transform .08s ease, background .18s ease, border-color .18s ease;
+         display: flex;
+         gap: 12px;
+         align-items: flex-start;
+      }
+
+      button.option:hover {
+         background: rgba(255, 255, 255, .10);
+         border-color: rgba(255, 255, 255, .22);
+         transform: translateY(-1px);
+      }
+
+      button.option:active {
+         transform: translateY(0px) scale(.998);
+      }
+
+      button.option:disabled {
+         cursor: not-allowed;
+         opacity: .9;
+      }
+
+      .badge {
+         flex: 0 0 auto;
+         width: 28px;
+         height: 28px;
+         border-radius: 10px;
+         display: grid;
+         place-items: center;
+         font-weight: 700;
+         font-size: 13px;
+         background: rgba(255, 255, 255, .10);
+         border: 1px solid rgba(255, 255, 255, .16);
+         color: rgba(255, 255, 255, .85);
+      }
+
+      .optText {
+         line-height: 1.35;
+         font-size: 15px;
+         color: rgba(255, 255, 255, .88);
+      }
+
+      .footer {
+         display: flex;
+         justify-content: space-between;
+         align-items: center;
+         gap: 12px;
+         flex-wrap: wrap;
+         padding-top: 4px;
+      }
+
+      .btn {
+         border: 1px solid rgba(255, 255, 255, .18);
+         background: rgba(255, 255, 255, .08);
+         color: rgba(255, 255, 255, .88);
+         padding: 10px 14px;
+         border-radius: 14px;
+         cursor: pointer;
+         transition: background .18s ease, transform .08s ease, border-color .18s ease;
+         font-size: 14px;
+         display: inline-flex;
+         align-items: center;
+         gap: 10px;
+         user-select: none;
+      }
+
+      .btn:hover {
+         background: rgba(255, 255, 255, .12);
+         border-color: rgba(255, 255, 255, .26);
+         transform: translateY(-1px);
+      }
+
+      .btn:active {
+         transform: translateY(0px);
+      }
+
+      .btn.primary {
+         background: linear-gradient(90deg, rgba(96, 165, 250, .28), rgba(167, 139, 250, .24));
+         border-color: rgba(255, 255, 255, .22);
+      }
+
+      .btn.primary:hover {
+         background: linear-gradient(90deg, rgba(96, 165, 250, .34), rgba(167, 139, 250, .30));
+      }
+
+      .btn:disabled {
+         opacity: .55;
+         cursor: not-allowed;
+         transform: none;
+      }
+
+      .hint {
+         color: var(--muted);
+         font-size: 13px;
+         line-height: 1.35;
+      }
+
+      .correct {
+         border-color: rgba(34, 197, 94, .55) !important;
+         background: rgba(34, 197, 94, .14) !important;
+      }
+
+      .wrong {
+         border-color: rgba(239, 68, 68, .55) !important;
+         background: rgba(239, 68, 68, .12) !important;
+      }
+
+      .selected {
+         border-color: rgba(96, 165, 250, .55) !important;
+         background: rgba(96, 165, 250, .14) !important;
+      }
+
+      .explain {
+         border: 1px solid rgba(255, 255, 255, .14);
+         background: rgba(255, 255, 255, .06);
+         border-radius: var(--radius2);
+         padding: 14px 14px;
+         display: none;
+         gap: 8px;
+      }
+
+      .explain.show {
+         display: grid;
+      }
+
+      .explain strong {
+         font-size: 14px;
+         letter-spacing: .02em;
+      }
+
+      .explain p {
+         margin: 0;
+         color: rgba(255, 255, 255, .80);
+         line-height: 1.4;
+         font-size: 14px;
+      }
+
+      .result {
+         display: none;
+         text-align: center;
+         padding: 26px 18px 24px;
+      }
+
+      .result.show {
+         display: block;
+      }
+
+      .score {
+         font-size: 44px;
+         margin: 0;
+         letter-spacing: -.03em;
+      }
+
+      .result p {
+         margin: 10px auto 0;
+         max-width: 720px;
+         color: rgba(255, 255, 255, .78);
+         line-height: 1.5;
+      }
+
+      .tiny {
+         color: rgba(255, 255, 255, .55);
+         font-size: 12px;
+      }
+
+      @media (max-width: 620px) {
+         .brand {
+            min-width: unset;
+         }
+
+         .qTitle {
+            font-size: 18px;
+         }
+
+         .score {
+            font-size: 40px;
+         }
+      }
+   </style>
 </head>
 
 <body>
-<div class="container">
-<div class="card">
-<h2 id="question"></h2>
-<div id="options"></div>
-<p id="feedback"></p>
-<button onclick="next()">Siguiente</button>
-</div>
-</div>
+   <div class="shell">
+      <div class="topbar">
+         <div class="brand">
+            <div class="logo" aria-hidden="true"></div>
+            <div>
+               <h1>Quiz · Diseño de Interfaces</h1>
+               <small id="subtitle">15 preguntas · corrección con explicación</small>
+            </div>
+         </div>
 
-<script>
-const quiz = [
-{q:"¿Qué decisión refleja mejor un diseño adaptado a móvil en una interfaz responsiva?",opts:["Mantener todo en horizontal","Simplificar con menú hamburguesa y una sola columna","Reducir tamaños sin cambiar estructura","Eliminar imágenes"],correct:1},
-{q:"¿Qué elemento mejora la experiencia en un mapa de navegación de ecommerce?",opts:["Menús redundantes","Ocultar categorías","Priorizar búsqueda, cuenta y carrito","Eliminar iconos"],correct:2},
-{q:"¿Principal problema de los estilos en línea?",opts:["No permiten color","Tienen menos prioridad","Dificultan mantenimiento","No funcionan en navegadores"],correct:2},
-{q:"¿Para qué sirve media='print'?",opts:["Animaciones en impresión","Optimizar carga","Adaptar contenido para papel","Controlar JS"],correct:2},
-{q:"¿Para qué sirve el atributo alt?",opts:["Mejorar resolución","Acelerar carga","Accesibilidad","Hacer funcionar CSS"],correct:2},
-{q:"¿Qué hace loading='lazy'?",opts:["Mejora diseño","Activa animaciones","Carga imágenes solo cuando se necesitan","Aumenta calidad"],correct:2},
-{q:"¿Función de controls en audio?",opts:["Editar audio","Auto reproducir","Mostrar controles","Mejorar sonido"],correct:2},
-{q:"Ventaja de transformaciones CSS?",opts:["Más complejas","Más fluidas y eficientes","Solo SVG","Sustituyen JS"],correct:1},
-{q:"Clave para sincronizar audio y animación?",opts:["Reducir duración","Reiniciar audio","Eliminar CSS","Solo scroll"],correct:1},
-{q:"¿Qué atributo mejora accesibilidad en formularios?",opts:["class","style","aria-label","id"],correct:2},
-{q:"¿Por qué usar contenedor 16:9 en vídeo?",opts:["Reducir tamaño","Mantener proporción","Mejorar calidad","Activar controles"],correct:1},
-{q:"Si no se puede usar teclado, ¿qué principio WCAG falla?",opts:["Perceptible","Operable","Comprensible","Robusto"],correct:1},
-{q:"Sin confirmación tras enviar formulario, ¿qué falla?",opts:["Flexibilidad","Visibilidad del estado","Prevención errores","Diseño"],correct:1},
-{q:"¿Qué mejora la arquitectura de la información?",opts:["Todo en una página","Categorías organizadas","Sin menú","Solo texto"],correct:1},
-{q:"¿Qué aumenta la conversión en landing page?",opts:["Muchos enlaces","CTA claros y visibles","Formulario oculto","Bajo contraste"],correct:1}
-];
+         <div class="meta">
+            <div class="pill"><span class="dot" aria-hidden="true"></span><span id="counter">1 / 15</span></div>
+            <div class="progressWrap" aria-label="Progreso">
+               <div class="progress" id="progress"></div>
+            </div>
+            <button class="btn" id="btnReset" type="button" title="Reiniciar">↻ Reiniciar</button>
+         </div>
+      </div>
 
-let current = 0;
-let score = 0;
+      <div class="card" id="card">
+         <div class="cardHeader">
+            <div>
+               <div class="kicker" id="kicker">Pregunta</div>
+               <h2 class="qTitle" id="question">—</h2>
+            </div>
+            <div class="pill" id="statePill" style="display:none;"></div>
+         </div>
 
-function loadQuestion(){
-const q = quiz[current];
-document.getElementById("question").innerText = q.q;
-const optionsDiv = document.getElementById("options");
-optionsDiv.innerHTML = "";
-document.getElementById("feedback").innerText="";
+         <div class="content" id="content">
+            <div class="options" id="options"></div>
 
-q.opts.forEach((opt,i)=>{
-const btn = document.createElement("button");
-btn.innerText = opt;
-btn.onclick = ()=>select(btn,i);
-optionsDiv.appendChild(btn);
-});
-}
+            <div class="explain" id="explainBox">
+               <strong id="explainTitle">Explicación</strong>
+               <p id="explainText"></p>
+               <div class="tiny" id="explainTiny"></div>
+            </div>
 
-function select(btn,i){
-const correct = quiz[current].correct;
-const buttons = document.querySelectorAll("#options button");
+            <div class="footer">
+               <div class="hint" id="hint">Selecciona una opción. Después, pulsa “Siguiente” para ver la corrección y explicación.</div>
+               <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;">
+                  <button class="btn" id="btnPrev" type="button">← Anterior</button>
+                  <button class="btn primary" id="btnNext" type="button">Siguiente →</button>
+               </div>
+            </div>
 
-buttons.forEach((b,idx)=>{
-b.disabled = true;
-if(idx===correct) b.classList.add("correct");
-if(idx===i && idx!==correct) b.classList.add("wrong");
-});
+            <div class="result" id="result">
+               <p class="score" id="score">0 / 0</p>
+               <p id="resultText"></p>
+               <div style="margin-top:14px;">
+                  <button class="btn primary" id="btnRestart2" type="button">Repetir quiz</button>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
 
-if(i===correct){
-score++;
-document.getElementById("feedback").innerText="Correcto";
-}else{
-document.getElementById("feedback").innerText="Incorrecto";
-}
-}
+   <script>
+      const quiz = [
+         {
+            title: "UT1-UT9",
+            q: "En el diseño de una interfaz responsiva para una tienda online, ¿qué decisión refleja mejor una correcta adaptación al entorno móvil?",
+            opts: [
+               "Mantener todos los elementos visibles en horizontal para evitar scroll.",
+               "Simplificar la navegación utilizando un menú hamburguesa y reorganizar el contenido en una sola columna.",
+               "Reducir el tamaño de todos los elementos sin modificar la estructura.",
+               "Eliminar imágenes para mejorar la velocidad."
+            ],
+            correct: 1,
+            exp: "En móvil no basta con encoger elementos. Lo adecuado es reorganizar la interfaz para adaptarla al espacio disponible, priorizando la navegación clara y una estructura vertical más cómoda."
+         },
+         {
+            title: "UT1-UT9",
+            q: "En un mapa de navegación bien diseñado para una web de comercio electrónico, ¿qué elemento es clave para mejorar la experiencia de usuario?",
+            opts: [
+               "Incluir múltiples menús redundantes en distintas zonas.",
+               "Priorizar elementos como búsqueda, cuenta de usuario y carrito en zonas visibles.",
+               "Ocultar las categorías para simplificar la interfaz.",
+               "Evitar iconos para reducir distracciones."
+            ],
+            correct: 1,
+            exp: "En ecommerce, funciones como buscar productos, acceder a la cuenta y revisar el carrito son tareas principales. Por eso deben estar visibles y ser fáciles de localizar."
+         },
+         {
+            title: "UT1-UT9",
+            q: "En el uso combinado de CSS en línea, interno y externo, ¿cuál es la principal desventaja del estilo en línea?",
+            opts: [
+               "No permite aplicar colores.",
+               "Tiene menor prioridad que los estilos externos.",
+               "Dificulta la reutilización y el mantenimiento del código.",
+               "No funciona en navegadores modernos."
+            ],
+            correct: 2,
+            exp: "El estilo en línea puede servir para un caso puntual, pero rompe la separación entre estructura y presentación, dificulta la reutilización y vuelve el mantenimiento bastante más pesado."
+         },
+         {
+            title: "UT1-UT9",
+            q: "Al diseñar una hoja de estilos específica para impresión, ¿cuál es la finalidad principal de usar media='print'?",
+            opts: [
+               "Aplicar animaciones durante la impresión.",
+               "Mejorar la velocidad de carga de la web.",
+               "Adaptar el contenido para que sea legible en papel eliminando elementos innecesarios.",
+               "Cambiar el comportamiento del JavaScript."
+            ],
+            correct: 2,
+            exp: "Una hoja de impresión sirve para optimizar la salida en papel: ocultar menús, imágenes decorativas o pie de página, y ajustar tipografías y espacios para mejorar la legibilidad."
+         },
+         {
+            title: "UT1-UT9",
+            q: "¿Por qué es importante usar el atributo alt en imágenes dentro de una web?",
+            opts: [
+               "Mejora la resolución de la imagen.",
+               "Permite que la imagen cargue más rápido.",
+               "Facilita la accesibilidad y describe el contenido para tecnologías de asistencia.",
+               "Es obligatorio para que CSS funcione."
+            ],
+            correct: 2,
+            exp: "El atributo alt proporciona una alternativa textual cuando la imagen no se ve o cuando el usuario emplea un lector de pantalla. Es una pieza básica de accesibilidad."
+         },
+         {
+            title: "UT1-UT9",
+            q: "¿Qué ventaja aporta el uso de loading='lazy' en imágenes?",
+            opts: [
+               "Mejora el diseño visual.",
+               "Permite aplicar animaciones automáticamente.",
+               "Retrasa la carga de imágenes hasta que son necesarias, optimizando el rendimiento.",
+               "Aumenta la calidad de la imagen."
+            ],
+            correct: 2,
+            exp: "La carga diferida evita descargar imágenes que todavía no están en pantalla. Eso reduce consumo de recursos y puede mejorar la velocidad percibida de la página."
+         },
+         {
+            title: "UT1-UT9",
+            q: "En la integración de audio en una página web, ¿qué función cumple el atributo controls?",
+            opts: [
+               "Permite modificar el archivo de audio.",
+               "Activa automáticamente el audio.",
+               "Muestra una interfaz para reproducir, pausar y controlar el audio.",
+               "Mejora la calidad del sonido."
+            ],
+            correct: 2,
+            exp: "El atributo controls hace visible el reproductor nativo del navegador, con botones y controles básicos para que el usuario interactúe con el audio."
+         },
+         {
+            title: "UT1-UT9",
+            q: "En animaciones web, ¿qué ventaja tiene utilizar transformaciones CSS como rotate o scale frente a modificar posiciones tradicionales?",
+            opts: [
+               "Son más complejas de implementar.",
+               "Mejoran el rendimiento y permiten animaciones más fluidas.",
+               "Solo funcionan en SVG.",
+               "Sustituyen completamente a JavaScript."
+            ],
+            correct: 1,
+            exp: "Las transformaciones CSS suelen renderizarse de forma más eficiente que otros cambios de maquetación, por lo que generan animaciones más suaves y con menor coste."
+         },
+         {
+            title: "UT1-UT9",
+            q: "Cuando se sincroniza una animación con un sonido mediante JavaScript, ¿qué acción es clave para garantizar la coherencia temporal?",
+            opts: [
+               "Reducir la duración de la animación.",
+               "Reiniciar el audio antes de reproducirlo en cada interacción.",
+               "Eliminar transiciones CSS.",
+               "Usar solo eventos de scroll."
+            ],
+            correct: 1,
+            exp: "Si el audio ya se había reproducido antes, conviene reiniciarlo para que vuelva a empezar en el momento exacto de la nueva interacción y no quede desfasado."
+         },
+         {
+            title: "UT1-UT9",
+            q: "En una interfaz interactiva con formularios, ¿qué atributo mejora directamente la accesibilidad para lectores de pantalla?",
+            opts: [
+               "class",
+               "style",
+               "aria-label",
+               "id"
+            ],
+            correct: 2,
+            exp: "aria-label proporciona una descripción accesible del elemento cuando es necesario complementar o definir su propósito para tecnologías de asistencia."
+         },
+         {
+            title: "UT1-UT9",
+            q: "¿Por qué es importante utilizar un contenedor con proporción, por ejemplo 16:9, al incrustar vídeos responsivos?",
+            opts: [
+               "Para reducir el tamaño del archivo.",
+               "Para mantener la relación de aspecto en distintos dispositivos.",
+               "Para mejorar la calidad del vídeo.",
+               "Para activar controles automáticos."
+            ],
+            correct: 1,
+            exp: "El contenedor proporcional permite que el vídeo escale sin deformarse, conservando su formato visual correcto en móviles, tabletas y escritorio."
+         },
+         {
+            title: "UT1-UT9",
+            q: "En una auditoría de accesibilidad basada en WCAG, ¿qué principio se vulnera si una web no puede navegarse con teclado?",
+            opts: [
+               "Perceptible",
+               "Operable",
+               "Comprensible",
+               "Robusto"
+            ],
+            correct: 1,
+            exp: "Si el usuario no puede usar el teclado para moverse por la interfaz, falla el principio Operable, porque la interacción no se puede realizar por distintos medios de entrada."
+         },
+         {
+            title: "UT1-UT9",
+            q: "En pruebas heurísticas de usabilidad, si un usuario no recibe confirmación tras enviar un formulario, ¿qué principio se está incumpliendo?",
+            opts: [
+               "Flexibilidad y eficiencia de uso",
+               "Visibilidad del estado del sistema",
+               "Prevención de errores",
+               "Diseño estético y minimalista"
+            ],
+            correct: 1,
+            exp: "El sistema debe informar al usuario de lo que está pasando. Si no confirma el envío, el usuario queda en duda y no sabe si la acción se ha completado."
+         },
+         {
+            title: "UT1-UT9",
+            q: "En el diseño UX de una plataforma de adopción de mascotas, ¿qué elemento favorece una arquitectura de la información clara?",
+            opts: [
+               "Mostrar todos los datos en una sola página sin estructura.",
+               "Organizar el contenido en categorías como reptiles, aves y roedores.",
+               "Ocultar el menú de navegación.",
+               "Usar solo texto sin elementos visuales."
+            ],
+            correct: 1,
+            exp: "Clasificar el contenido en categorías comprensibles ayuda al usuario a localizar información, comprender la oferta disponible y navegar con menos esfuerzo."
+         },
+         {
+            title: "UT1-UT9",
+            q: "En una landing page orientada a conversión, ¿qué estrategia aumenta la probabilidad de que el usuario complete un formulario?",
+            opts: [
+               "Incluir múltiples enlaces externos que distraigan.",
+               "Utilizar CTA visibles, claros y repetidos estratégicamente.",
+               "Ocultar el formulario hasta el final de la página.",
+               "Reducir el contraste visual del botón de acción."
+            ],
+            correct: 1,
+            exp: "Una landing eficaz guía la atención hacia la acción principal. Los CTA deben destacar visualmente, ser claros y aparecer en puntos estratégicos del recorrido del usuario."
+         }
+      ];
 
-function next(){
-current++;
-if(current>=quiz.length){
-document.getElementById("question").innerText="Resultado final";
-document.getElementById("options").innerHTML="";
-document.getElementById("feedback").innerText=score+" / "+quiz.length;
-return;
-}
-loadQuestion();
-}
+      const elCounter = document.getElementById("counter");
+      const elProgress = document.getElementById("progress");
+      const elKicker = document.getElementById("kicker");
+      const elQuestion = document.getElementById("question");
+      const elOptions = document.getElementById("options");
+      const elHint = document.getElementById("hint");
+      const elExplainBox = document.getElementById("explainBox");
+      const elExplainText = document.getElementById("explainText");
+      const elExplainTiny = document.getElementById("explainTiny");
+      const elStatePill = document.getElementById("statePill");
+      const btnPrev = document.getElementById("btnPrev");
+      const btnNext = document.getElementById("btnNext");
+      const btnReset = document.getElementById("btnReset");
+      const elResult = document.getElementById("result");
+      const elScore = document.getElementById("score");
+      const elResultText = document.getElementById("resultText");
+      const btnRestart2 = document.getElementById("btnRestart2");
 
-loadQuestion();
-</script>
+      let i = 0;
+      let phase = "question";
+      const picks = Array(quiz.length).fill(null);
+      const checked = Array(quiz.length).fill(false);
+
+      function updateProgress() {
+         const totalSteps = quiz.length * 2;
+         const currentStep = i * 2 + (phase === "answer" ? 2 : 1);
+         elProgress.style.width = `${(currentStep / totalSteps) * 100}%`;
+      }
+
+      function render() {
+         if (i >= quiz.length) {
+            showResult();
+            return;
+         }
+
+         const q = quiz[i];
+         elCounter.textContent = `${i + 1} / ${quiz.length}`;
+         updateProgress();
+         elKicker.textContent = phase === "question" ? `Pregunta · ${q.title}` : `Corrección · ${q.title}`;
+         elQuestion.textContent = q.q;
+
+         elExplainBox.classList.remove("show");
+         elStatePill.style.display = "none";
+         elStatePill.className = "pill";
+         elStatePill.textContent = "";
+         elOptions.innerHTML = "";
+         elResult.classList.remove("show");
+
+         q.opts.forEach((txt, idxOpt) => {
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.className = "option";
+
+            const badge = document.createElement("div");
+            badge.className = "badge";
+            badge.textContent = String.fromCharCode(65 + idxOpt);
+
+            const span = document.createElement("div");
+            span.className = "optText";
+            span.textContent = txt;
+
+            btn.appendChild(badge);
+            btn.appendChild(span);
+
+            const picked = picks[i] === idxOpt;
+            const isCorrect = idxOpt === q.correct;
+
+            if (phase === "question") {
+               btn.disabled = false;
+               btn.addEventListener("click", () => {
+                  picks[i] = idxOpt;
+                  document.querySelectorAll("button.option").forEach(b => b.classList.remove("selected"));
+                  btn.classList.add("selected");
+                  elHint.textContent = "Seleccionado. Pulsa “Siguiente” para ver la corrección y explicación.";
+               });
+
+               if (picked) {
+                  btn.classList.add("selected");
+                  elHint.textContent = "Seleccionado. Pulsa “Siguiente” para ver la corrección y explicación.";
+               } else {
+                  elHint.textContent = "Selecciona una opción. Después, pulsa “Siguiente” para ver la corrección y explicación.";
+               }
+            } else {
+               btn.disabled = true;
+
+               if (isCorrect) btn.classList.add("correct");
+               if (picked && !isCorrect) btn.classList.add("wrong");
+
+               elExplainBox.classList.add("show");
+               elExplainText.textContent = q.exp;
+               const pickedTxt = picks[i] == null ? "—" : String.fromCharCode(65 + picks[i]);
+               const correctTxt = String.fromCharCode(65 + q.correct);
+               elExplainTiny.textContent = `Tu respuesta: ${pickedTxt} · Correcta: ${correctTxt}`;
+
+               elStatePill.style.display = "inline-flex";
+               if (picks[i] === q.correct) {
+                  elStatePill.textContent = "✅ Correcta";
+                  elStatePill.style.borderColor = "rgba(34,197,94,.45)";
+                  elStatePill.style.background = "rgba(34,197,94,.12)";
+               } else {
+                  elStatePill.textContent = "❌ Incorrecta";
+                  elStatePill.style.borderColor = "rgba(239,68,68,.45)";
+                  elStatePill.style.background = "rgba(239,68,68,.10)";
+               }
+
+               elHint.textContent = "Ya está corregida. Pulsa “Siguiente” para continuar.";
+            }
+
+            elOptions.appendChild(btn);
+         });
+
+         btnPrev.disabled = (i === 0 && phase === "question");
+         btnNext.disabled = false;
+         btnNext.textContent = phase === "question" ? "Siguiente →" : (i === quiz.length - 1 ? "Finalizar →" : "Siguiente →");
+      }
+
+      function next() {
+         if (i >= quiz.length) return;
+
+         if (phase === "question") {
+            if (picks[i] == null) {
+               elHint.textContent = "Te falta elegir una opción.";
+               return;
+            }
+            phase = "answer";
+            checked[i] = true;
+            render();
+            return;
+         }
+
+         phase = "question";
+         i += 1;
+         render();
+      }
+
+      function prev() {
+         if (i === 0 && phase === "question") return;
+
+         if (phase === "answer") {
+            phase = "question";
+            render();
+            return;
+         }
+
+         i -= 1;
+         phase = checked[i] ? "answer" : "question";
+         render();
+      }
+
+      function resetAll() {
+         i = 0;
+         phase = "question";
+         for (let k = 0; k < quiz.length; k++) {
+            picks[k] = null;
+            checked[k] = false;
+         }
+         btnNext.disabled = false;
+         elResult.classList.remove("show");
+         document.getElementById("content").style.display = "grid";
+         render();
+      }
+
+      function showResult() {
+         const total = quiz.length;
+         let ok = 0;
+         for (let k = 0; k < total; k++) {
+            if (picks[k] === quiz[k].correct) ok++;
+         }
+         elScore.textContent = `${ok} / ${total}`;
+         const ratio = ok / total;
+
+         let msg;
+         if (ratio === 1) msg = "Perfecto. Dominas bastante bien los conceptos de diseño de interfaces.";
+         else if (ratio >= .75) msg = "Muy buen resultado. Hay algún detalle mejorable, pero el nivel es sólido.";
+         else if (ratio >= .5) msg = "Resultado aceptable. Conviene repasar varios conceptos antes de dar el tema por cerrado.";
+         else msg = "Toca repasar. La interfaz no se diseña sola.";
+
+         elResultText.textContent = msg;
+
+         document.getElementById("content").style.display = "block";
+         elOptions.innerHTML = "";
+         elExplainBox.classList.remove("show");
+         elHint.textContent = "Resultado final";
+         elStatePill.style.display = "none";
+         elProgress.style.width = "100%";
+         elKicker.textContent = "Resultado";
+         elQuestion.textContent = "Fin del quiz";
+         elResult.classList.add("show");
+         btnPrev.disabled = true;
+         btnNext.disabled = true;
+      }
+
+      btnNext.addEventListener("click", next);
+      btnPrev.addEventListener("click", prev);
+      btnReset.addEventListener("click", resetAll);
+      btnRestart2.addEventListener("click", resetAll);
+
+      render();
+   </script>
 </body>
+
 </html>
